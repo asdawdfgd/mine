@@ -1,5 +1,5 @@
-# استخدام صورة Kali XFCE من LinuxServer.io كقاعدة
-FROM linuxserver/webtop:kali-xfce
+# تغييرنا النسخة إلى Ubuntu XFCE لأن نسخة Kali غير متوفرة في Webtop
+FROM linuxserver/webtop:ubuntu-xfce
 
 # تحديث النظام وتثبيت المتطلبات الأساسية
 RUN apt-get update && \
@@ -13,7 +13,7 @@ RUN apt-get update && \
     libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# تحميل وتثبيت PufferPanel (النسخة الثنائية Binary مباشرة لتجنب مشاكل Systemd)
+# تحميل وتثبيت PufferPanel
 RUN mkdir -p /var/lib/pufferpanel
 WORKDIR /var/lib/pufferpanel
 
@@ -21,9 +21,7 @@ WORKDIR /var/lib/pufferpanel
 RUN curl -L -o pufferpanel https://github.com/PufferPanel/PufferPanel/releases/latest/download/pufferpanel_linux_amd64 && \
     chmod +x pufferpanel
 
-# إضافة PufferPanel إلى المسار العام ليسهل تشغيله
+# إضافة PufferPanel إلى المسار العام
 RUN cp /var/lib/pufferpanel/pufferpanel /usr/local/bin/pufferpanel
 
-# إعداد الأمر ليتم تشغيله يدوياً أو عبر سكربت لاحقاً
-# ملاحظة: الصورة الأساسية (WebTop) لديها نظام تشغيل خاص بها (S6-Overlay)
-# نحن لن نعدل الـ Entrypoint الأساسي حتى لا نخرب واجهة سطح المكتب.
+# ملاحظة: سيتم استخدام Entrypoint الخاص بـ WebTop لتشغيل الواجهة
